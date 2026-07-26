@@ -15,7 +15,7 @@ export default function Header() {
       </div>
       
       <div className={styles.actions}>
-        <button className={styles.iconBtn}>
+        <button className={styles.iconBtn} onClick={() => alert('No new notifications')}>
           <Bell size={20} />
           <span className={styles.badge}>3</span>
         </button>

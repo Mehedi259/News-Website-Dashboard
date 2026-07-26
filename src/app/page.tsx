@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { TrendingUp, Users, FileText, Activity } from 'lucide-react';
 import styles from './page.module.css';
 
@@ -16,10 +17,10 @@ export default function Dashboard() {
           <h1 className={styles.title}>Dashboard Overview</h1>
           <p className={styles.subtitle}>Welcome back! Here&apos;s what&apos;s happening today.</p>
         </div>
-        <button className="btn btn-primary">
+        <Link href="/posts/new" className="btn btn-primary">
           <FileText size={18} />
           Create New Post
-        </button>
+        </Link>
       </header>
 
       <div className={styles.statsGrid}>

@@ -1,6 +1,10 @@
+'use client';
+import { useRef } from 'react';
 import { Plus, Edit2, Trash2 } from 'lucide-react';
 
 export default function CategoriesPage() {
+  const inputRef = useRef<HTMLInputElement>(null);
+
   const categories = [
     { id: 1, name: 'প্রচ্ছদ', slug: 'home', count: 120 },
     { id: 2, name: 'প্রবাস', slug: 'probash', count: 450 },
@@ -16,7 +20,7 @@ export default function CategoriesPage() {
           <h1 style={{ fontSize: '1.75rem', fontWeight: 700, marginBottom: '0.25rem', letterSpacing: '-0.02em' }}>Manage Categories</h1>
           <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem' }}>Add, edit, or delete news categories.</p>
         </div>
-        <button className="btn btn-primary">
+        <button className="btn btn-primary" onClick={() => inputRef.current?.focus()}>
           <Plus size={18} />
           Add Category
         </button>
@@ -30,7 +34,7 @@ export default function CategoriesPage() {
           <form style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
             <div className="input-group" style={{ marginBottom: 0 }}>
               <label className="input-label">Category Name</label>
-              <input type="text" className="input-field" placeholder="e.g. Technology" />
+              <input ref={inputRef} type="text" className="input-field" placeholder="e.g. Technology" />
             </div>
             <div className="input-group" style={{ marginBottom: 0 }}>
               <label className="input-label">Slug</label>
