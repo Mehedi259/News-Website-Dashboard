@@ -19,10 +19,20 @@ export default function NewPostPage() {
 
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
-  const [excerpt, setExcerpt] = useState('');
   const [category, setCategory] = useState('');
-  const [status, setStatus] = useState('published'); // default to published for easier testing
+  const [status, setStatus] = useState('published');
   const [image, setImage] = useState('');
+  
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImage(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   useEffect(() => {
     loadCategories();
@@ -66,7 +76,6 @@ export default function NewPostPage() {
       title,
       slug,
       content,
-      excerpt,
       category,
       status: postStatus,
       image: image || '/images/hero_news_oman_1783894879641.png', // Fallback image if empty
@@ -155,16 +164,8 @@ export default function NewPostPage() {
                 ></textarea>
               </div>
             </div>
-            
-            <div className="input-group" style={{ marginBottom: 0 }}>
-              <label className="input-label">Excerpt (Optional)</label>
-              <textarea 
-                className="input-field" 
-                placeholder="A short summary of the article..."
-                rows={3}
-                value={excerpt}
-                onChange={(e) => setExcerpt(e.target.value)}
-              ></textarea>
+                ></textarea>
+              </div>
             </div>
           </div>
         </div>
@@ -199,15 +200,23 @@ export default function NewPostPage() {
           </div>
 
           <div className="card">
-            <h3 className={styles.sectionTitle}>Featured Image URL</h3>
+            <h3 className={styles.sectionTitle}>Featured Image</h3>
             <div className="input-group" style={{ marginBottom: 0 }}>
-              <label className="input-label">Image URL (Optional)</label>
+              <label className="input-label">Upload Image</label>
+              <div 
+                className={styles.imageUpload} 
+                onClick={() => document.getElementById('image-upload')?.click()}
+              >
+                <ImageIcon size={24} className={styles.uploadIcon} />
+                <span className={styles.uploadText}>Click to select image</span>
+                <span className={styles.uploadHint}>JPG, PNG, GIF up to 5MB</span>
+              </div>
               <input 
-                type="text" 
-                className="input-field" 
-                placeholder="https://example.com/image.jpg"
-                value={image}
-                onChange={(e) => setImage(e.target.value)}
+                id="image-upload"
+                type="file" 
+                accept="image/*"
+                style={{ display: 'none' }}
+                onChange={handleImageUpload}
               />
               {image && (
                 <div style={{ marginTop: '10px', width: '100%', height: '120px', background: `url(${image}) center/cover`, borderRadius: '4px' }} />
