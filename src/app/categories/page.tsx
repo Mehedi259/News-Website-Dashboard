@@ -1,17 +1,67 @@
 'use client';
-import { useRef } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { Plus, Edit2, Trash2 } from 'lucide-react';
+import { fetchAPI } from '@/lib/api';
+
+interface Category {
+  _id: string;
+  name: string;
+  slug: string;
+}
 
 export default function CategoriesPage() {
   const inputRef = useRef<HTMLInputElement>(null);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [name, setName] = useState('');
+  const [slug, setSlug] = useState('');
+  const [saving, setSaving] = useState(false);
 
-  const categories = [
-    { id: 1, name: 'প্রচ্ছদ', slug: 'home', count: 120 },
-    { id: 2, name: 'প্রবাস', slug: 'probash', count: 450 },
-    { id: 3, name: 'সর্বশেষ', slug: 'latest', count: 85 },
-    { id: 4, name: 'বাংলাদেশ', slug: 'bangladesh', count: 930 },
-    { id: 5, name: 'আন্তর্জাতিক', slug: 'international', count: 240 },
-  ];
+  useEffect(() => {
+    loadCategories();
+  }, []);
+
+  const loadCategories = async () => {
+    try {
+      const res = await fetchAPI('/categories');
+      if (res.success) {
+        setCategories(res.data);
+      }
+    } catch (err) {
+      console.error('Failed to load categories', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSave = async () => {
+    if (!name || !slug) return alert('Name and slug are required');
+    setSaving(true);
+    try {
+      const res = await fetchAPI('/categories', {
+        data: { name, slug }
+      });
+      if (res.success) {
+        setCategories([...categories, res.data]);
+        setName('');
+        setSlug('');
+      }
+    } catch (err: any) {
+      alert(err.message || 'Failed to create category');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleDelete = async (id: string) => {
+    if (!confirm('Are you sure you want to delete this category?')) return;
+    try {
+      await fetchAPI(`/categories/${id}`, { method: 'DELETE' });
+      setCategories(categories.filter(c => c._id !== id));
+    } catch (err: any) {
+      alert(err.message || 'Failed to delete category');
+    }
+  };
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
@@ -31,16 +81,33 @@ export default function CategoriesPage() {
           <h3 style={{ fontSize: '1.1rem', fontWeight: 600, marginBottom: '1rem', borderBottom: '1px solid var(--border)', paddingBottom: '0.75rem' }}>
             Add New Category
           </h3>
-          <form style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          <form style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }} onSubmit={(e) => { e.preventDefault(); handleSave(); }}>
             <div className="input-group" style={{ marginBottom: 0 }}>
               <label className="input-label">Category Name</label>
-              <input ref={inputRef} type="text" className="input-field" placeholder="e.g. Technology" />
+              <input 
+                ref={inputRef} 
+                type="text" 
+                className="input-field" 
+                placeholder="e.g. Technology" 
+                value={name}
+                onChange={e => setName(e.target.value)}
+                required
+              />
             </div>
             <div className="input-group" style={{ marginBottom: 0 }}>
               <label className="input-label">Slug</label>
-              <input type="text" className="input-field" placeholder="e.g. technology" />
+              <input 
+                type="text" 
+                className="input-field" 
+                placeholder="e.g. technology" 
+                value={slug}
+                onChange={e => setSlug(e.target.value)}
+                required
+              />
             </div>
-            <button type="button" className="btn btn-primary" style={{ marginTop: '0.5rem', width: '100%' }}>Save Category</button>
+            <button type="submit" className="btn btn-primary" style={{ marginTop: '0.5rem', width: '100%' }} disabled={saving}>
+              {saving ? 'Saving...' : 'Save Category'}
+            </button>
           </form>
         </div>
 
@@ -51,28 +118,32 @@ export default function CategoriesPage() {
                 <tr>
                   <th>Name</th>
                   <th>Slug</th>
-                  <th>Posts</th>
                   <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
-                {categories.map(cat => (
-                  <tr key={cat.id}>
-                    <td><strong>{cat.name}</strong></td>
-                    <td>{cat.slug}</td>
-                    <td>{cat.count}</td>
-                    <td>
-                      <div style={{ display: 'flex', gap: '0.5rem' }}>
-                        <button style={{ width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 'var(--radius-sm)', background: 'var(--bg-card-hover)', color: 'var(--text-secondary)' }}>
-                          <Edit2 size={16} />
-                        </button>
-                        <button style={{ width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 'var(--radius-sm)', background: 'rgba(239, 68, 68, 0.1)', color: 'var(--danger)' }}>
-                          <Trash2 size={16} />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
+                {loading ? (
+                  <tr><td colSpan={3} style={{ textAlign: 'center', padding: '1rem' }}>Loading...</td></tr>
+                ) : categories.length === 0 ? (
+                  <tr><td colSpan={3} style={{ textAlign: 'center', padding: '1rem' }}>No categories found.</td></tr>
+                ) : (
+                  categories.map(cat => (
+                    <tr key={cat._id}>
+                      <td><strong>{cat.name}</strong></td>
+                      <td>{cat.slug}</td>
+                      <td>
+                        <div style={{ display: 'flex', gap: '0.5rem' }}>
+                          <button style={{ width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 'var(--radius-sm)', background: 'var(--bg-card-hover)', color: 'var(--text-secondary)', cursor: 'pointer' }}>
+                            <Edit2 size={16} />
+                          </button>
+                          <button onClick={() => handleDelete(cat._id)} style={{ width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 'var(--radius-sm)', background: 'rgba(239, 68, 68, 0.1)', color: 'var(--danger)', cursor: 'pointer', border: 'none' }}>
+                            <Trash2 size={16} />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                )}
               </tbody>
             </table>
           </div>

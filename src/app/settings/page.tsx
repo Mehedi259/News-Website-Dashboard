@@ -1,9 +1,54 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Save, Globe, Lock, Bell, Palette } from 'lucide-react';
+import { fetchAPI } from '@/lib/api';
 
 export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState('general');
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  
+  const [settings, setSettings] = useState({
+    siteName: 'Hellow Oman News',
+    siteDescription: 'সবার আগে সব খবর',
+    contactEmail: 'contact@hellowoman.com',
+  });
+
+  useEffect(() => {
+    loadSettings();
+  }, []);
+
+  const loadSettings = async () => {
+    try {
+      const res = await fetchAPI('/settings');
+      if (res.success && res.data) {
+        setSettings({
+          siteName: res.data.siteName || '',
+          siteDescription: res.data.siteDescription || '',
+          contactEmail: res.data.contactEmail || '',
+        });
+      }
+    } catch (err) {
+      console.error('Failed to load settings', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSave = async () => {
+    setSaving(true);
+    try {
+      await fetchAPI('/settings', {
+        method: 'PUT',
+        data: settings,
+      });
+      alert('General settings saved!');
+    } catch (err: any) {
+      alert(err.message || 'Failed to save settings');
+    } finally {
+      setSaving(false);
+    }
+  };
 
   const renderContent = () => {
     switch (activeTab) {
@@ -12,33 +57,49 @@ export default function SettingsPage() {
           <div className="card">
             <h3 style={{ fontSize: '1.1rem', fontWeight: 600, marginBottom: '1.5rem', color: 'var(--text-primary)' }}>Site Details</h3>
             
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
-              <div className="input-group">
-                <label className="input-label">Website Name</label>
-                <input type="text" className="input-field" defaultValue="Hellow Oman News" />
-              </div>
-              <div className="input-group">
-                <label className="input-label">Site Tagline</label>
-                <input type="text" className="input-field" defaultValue="সবার আগে সব খবর" />
-              </div>
-            </div>
+            {loading ? (
+              <p>Loading settings...</p>
+            ) : (
+              <>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+                  <div className="input-group">
+                    <label className="input-label">Website Name</label>
+                    <input 
+                      type="text" 
+                      className="input-field" 
+                      value={settings.siteName} 
+                      onChange={e => setSettings({...settings, siteName: e.target.value})}
+                    />
+                  </div>
+                  <div className="input-group">
+                    <label className="input-label">Contact Email</label>
+                    <input 
+                      type="email" 
+                      className="input-field" 
+                      value={settings.contactEmail} 
+                      onChange={e => setSettings({...settings, contactEmail: e.target.value})}
+                    />
+                  </div>
+                </div>
 
-            <div className="input-group">
-              <label className="input-label">Contact Email</label>
-              <input type="email" className="input-field" defaultValue="contact@hellowoman.com" />
-            </div>
+                <div className="input-group">
+                  <label className="input-label">Site Description (SEO)</label>
+                  <textarea 
+                    className="input-field" 
+                    rows={4} 
+                    value={settings.siteDescription}
+                    onChange={e => setSettings({...settings, siteDescription: e.target.value})}
+                  ></textarea>
+                </div>
 
-            <div className="input-group">
-              <label className="input-label">Site Description (SEO)</label>
-              <textarea className="input-field" rows={4} defaultValue="The most trusted news portal for probashi Bangladeshis in Oman."></textarea>
-            </div>
-
-            <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '1rem' }}>
-              <button className="btn btn-primary" onClick={() => alert('General settings saved!')}>
-                <Save size={18} />
-                Save Changes
-              </button>
-            </div>
+                <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '1rem' }}>
+                  <button className="btn btn-primary" onClick={handleSave} disabled={saving}>
+                    <Save size={18} />
+                    {saving ? 'Saving...' : 'Save Changes'}
+                  </button>
+                </div>
+              </>
+            )}
           </div>
         );
       case 'appearance':
