@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { Save, Globe, Lock, Bell, Palette } from 'lucide-react';
 import { fetchAPI } from '@/lib/api';
+import styles from './page.module.css';
 
 export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState('general');
@@ -61,7 +62,7 @@ export default function SettingsPage() {
               <p>Loading settings...</p>
             ) : (
               <>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+                <div className={styles.formGrid}>
                   <div className="input-group">
                     <label className="input-label">Website Name</label>
                     <input 
@@ -144,14 +145,14 @@ export default function SettingsPage() {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem', maxWidth: '1000px' }}>
+    <div className={styles.settingsContainer}>
       <header>
         <h1 style={{ fontSize: '1.75rem', fontWeight: 700, marginBottom: '0.25rem', letterSpacing: '-0.02em' }}>Settings</h1>
         <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem' }}>Manage your website and dashboard preferences.</p>
       </header>
 
-      <div style={{ display: 'flex', gap: '2rem', alignItems: 'flex-start' }}>
-        <aside style={{ width: '240px', display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+      <div className={styles.settingsLayout}>
+        <aside className={styles.sidebar}>
           <div style={getTabStyle('general')} onClick={() => setActiveTab('general')}>
             <Globe size={18} /> General
           </div>
@@ -166,7 +167,7 @@ export default function SettingsPage() {
           </div>
         </aside>
 
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+        <div className={styles.content}>
           {renderContent()}
         </div>
       </div>

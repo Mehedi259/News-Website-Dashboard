@@ -1,10 +1,15 @@
 'use client';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, FileText, Tags, Settings, Users } from 'lucide-react';
+import { LayoutDashboard, FileText, Tags, Settings, Users, X } from 'lucide-react';
 import styles from './Sidebar.module.css';
 
-export default function Sidebar() {
+interface SidebarProps {
+  isOpen: boolean;
+  setIsOpen: (isOpen: boolean) => void;
+}
+
+export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
   const pathname = usePathname();
 
   const navItems = [
@@ -16,10 +21,19 @@ export default function Sidebar() {
   ];
 
   return (
-    <aside className={styles.sidebar}>
+    <aside className={`${styles.sidebar} ${isOpen ? styles.open : ''}`}>
       <div className={styles.logoContainer}>
-        <div className={styles.logoIcon}>N</div>
-        <h1 className={styles.logoText}>NewsAdmin</h1>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+          <div className={styles.logoIcon}>N</div>
+          <h1 className={styles.logoText}>NewsAdmin</h1>
+        </div>
+        <button 
+          className={styles.closeBtn} 
+          onClick={() => setIsOpen(false)}
+          aria-label="Close sidebar"
+        >
+          <X size={20} />
+        </button>
       </div>
       
       <nav className={styles.nav}>

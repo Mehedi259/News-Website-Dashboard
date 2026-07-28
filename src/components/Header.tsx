@@ -1,17 +1,30 @@
 'use client';
-import { Bell, Search, User } from 'lucide-react';
+import { Bell, Search, User, Menu } from 'lucide-react';
 import styles from './Header.module.css';
 
-export default function Header() {
+interface HeaderProps {
+  toggleSidebar: () => void;
+}
+
+export default function Header({ toggleSidebar }: HeaderProps) {
   return (
     <header className={styles.header}>
-      <div className={styles.searchContainer}>
-        <Search className={styles.searchIcon} size={18} />
-        <input 
-          type="text" 
-          placeholder="Search everywhere..." 
-          className={styles.searchInput}
-        />
+      <div className={styles.leftSection}>
+        <button 
+          className={styles.menuBtn} 
+          onClick={toggleSidebar}
+          aria-label="Toggle sidebar"
+        >
+          <Menu size={24} />
+        </button>
+        <div className={styles.searchContainer}>
+          <Search className={styles.searchIcon} size={18} />
+          <input 
+            type="text" 
+            placeholder="Search everywhere..." 
+            className={styles.searchInput}
+          />
+        </div>
       </div>
       
       <div className={styles.actions}>

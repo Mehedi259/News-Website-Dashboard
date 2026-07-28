@@ -11,6 +11,22 @@
   z-index: 10;
 }
 
+.leftSection {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.menuBtn {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--text-primary);
+  cursor: pointer;
+  padding: 0.5rem;
+  margin-left: -0.5rem;
+}
+
 .searchContainer {
   display: flex;
   align-items: center;
@@ -123,4 +139,29 @@
 .userRole {
   font-size: 0.75rem;
   color: var(--text-muted);
+}
+
+@media (max-width: 768px) {
+  .header {
+    padding: 0 1rem;
+  }
+
+  .menuBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .searchContainer {
+    display: none;
+  }
+
+  .userInfo {
+    display: none;
+  }
+  
+  .userProfile {
+    padding-left: 0;
+    border-left: none;
+  }
 }

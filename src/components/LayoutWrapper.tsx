@@ -11,6 +11,8 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
   const [loading, setLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
   useEffect(() => {
     const verifyToken = async () => {
       const token = getAuthToken();
@@ -45,6 +47,11 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
     verifyToken();
   }, [pathname, router]);
 
+  // Close sidebar on path change
+  useEffect(() => {
+    setIsSidebarOpen(false);
+  }, [pathname]);
+
   if (loading) {
     return (
       <div style={{ display: 'flex', height: '100vh', width: '100vw', alignItems: 'center', justifyContent: 'center' }}>
@@ -61,9 +68,18 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
 
   return (
     <div className="app-container">
-      <Sidebar />
+      <Sidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
+      
+      {/* Mobile Overlay */}
+      {isSidebarOpen && (
+        <div 
+          className="sidebar-overlay"
+          onClick={() => setIsSidebarOpen(false)}
+        />
+      )}
+      
       <main className="main-content">
-        <Header />
+        <Header toggleSidebar={() => setIsSidebarOpen(true)} />
         <div className="page-content">
           {children}
         </div>
