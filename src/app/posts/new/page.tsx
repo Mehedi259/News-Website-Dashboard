@@ -164,9 +164,7 @@ export default function NewPostPage() {
                 ></textarea>
               </div>
             </div>
-                ></textarea>
-              </div>
-            </div>
+
           </div>
         </div>
 
