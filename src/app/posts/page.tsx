@@ -16,14 +16,19 @@ interface Post {
 export default function PostsPage() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState('');
 
   useEffect(() => {
-    loadPosts();
-  }, []);
+    const timer = setTimeout(() => {
+      loadPosts();
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [search]);
 
   const loadPosts = async () => {
     try {
-      const res = await fetchAPI('/posts');
+      const endpoint = search ? `/posts?search=${encodeURIComponent(search)}` : '/posts';
+      const res = await fetchAPI(endpoint);
       if (res.success) {
         setPosts(res.data);
       }
@@ -62,7 +67,7 @@ export default function PostsPage() {
           <div className="input-group" style={{ marginBottom: 0, width: '300px' }}>
             <div className={styles.searchBox}>
               <Search size={18} className={styles.searchIcon} />
-              <input type="text" placeholder="Search posts..." className="input-field" style={{ paddingLeft: '2.5rem' }} />
+              <input type="text" placeholder="Search posts..." className="input-field" style={{ paddingLeft: '2.5rem' }} value={search} onChange={(e) => setSearch(e.target.value)} />
             </div>
           </div>
           <button className="btn btn-secondary">

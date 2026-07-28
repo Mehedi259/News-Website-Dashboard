@@ -16,6 +16,7 @@ export default function CategoriesPage() {
   const [name, setName] = useState('');
   const [slug, setSlug] = useState('');
   const [saving, setSaving] = useState(false);
+  const [editId, setEditId] = useState<string | null>(null);
 
   useEffect(() => {
     loadCategories();
@@ -38,13 +39,26 @@ export default function CategoriesPage() {
     if (!name || !slug) return alert('Name and slug are required');
     setSaving(true);
     try {
-      const res = await fetchAPI('/categories', {
-        data: { name, slug }
-      });
-      if (res.success) {
-        setCategories([...categories, res.data]);
-        setName('');
-        setSlug('');
+      if (editId) {
+        const res = await fetchAPI(`/categories/${editId}`, {
+          method: 'PUT',
+          data: { name, slug }
+        });
+        if (res.success) {
+          setCategories(categories.map(c => c._id === editId ? res.data : c));
+          setName('');
+          setSlug('');
+          setEditId(null);
+        }
+      } else {
+        const res = await fetchAPI('/categories', {
+          data: { name, slug }
+        });
+        if (res.success) {
+          setCategories([...categories, res.data]);
+          setName('');
+          setSlug('');
+        }
       }
     } catch (err: any) {
       alert(err.message || 'Failed to create category');
@@ -70,7 +84,7 @@ export default function CategoriesPage() {
           <h1 style={{ fontSize: '1.75rem', fontWeight: 700, marginBottom: '0.25rem', letterSpacing: '-0.02em' }}>Manage Categories</h1>
           <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem' }}>Add, edit, or delete news categories.</p>
         </div>
-        <button className="btn btn-primary" onClick={() => inputRef.current?.focus()}>
+        <button className="btn btn-primary" onClick={() => { setEditId(null); setName(''); setSlug(''); inputRef.current?.focus(); }}>
           <Plus size={18} />
           Add Category
         </button>
@@ -79,7 +93,7 @@ export default function CategoriesPage() {
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '1.5rem' }}>
         <div className="card">
           <h3 style={{ fontSize: '1.1rem', fontWeight: 600, marginBottom: '1rem', borderBottom: '1px solid var(--border)', paddingBottom: '0.75rem' }}>
-            Add New Category
+            {editId ? 'Edit Category' : 'Add New Category'}
           </h3>
           <form style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }} onSubmit={(e) => { e.preventDefault(); handleSave(); }}>
             <div className="input-group" style={{ marginBottom: 0 }}>
@@ -106,8 +120,13 @@ export default function CategoriesPage() {
               />
             </div>
             <button type="submit" className="btn btn-primary" style={{ marginTop: '0.5rem', width: '100%' }} disabled={saving}>
-              {saving ? 'Saving...' : 'Save Category'}
+              {saving ? 'Saving...' : editId ? 'Update Category' : 'Save Category'}
             </button>
+            {editId && (
+              <button type="button" className="btn btn-secondary" style={{ width: '100%' }} onClick={() => { setEditId(null); setName(''); setSlug(''); }}>
+                Cancel
+              </button>
+            )}
           </form>
         </div>
 
@@ -133,7 +152,7 @@ export default function CategoriesPage() {
                       <td>{cat.slug}</td>
                       <td>
                         <div style={{ display: 'flex', gap: '0.5rem' }}>
-                          <button style={{ width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 'var(--radius-sm)', background: 'var(--bg-card-hover)', color: 'var(--text-secondary)', cursor: 'pointer' }}>
+                          <button onClick={() => { setEditId(cat._id); setName(cat.name); setSlug(cat.slug); inputRef.current?.focus(); }} style={{ width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 'var(--radius-sm)', background: 'var(--bg-card-hover)', color: 'var(--text-secondary)', cursor: 'pointer', border: 'none' }}>
                             <Edit2 size={16} />
                           </button>
                           <button onClick={() => handleDelete(cat._id)} style={{ width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 'var(--radius-sm)', background: 'rgba(239, 68, 68, 0.1)', color: 'var(--danger)', cursor: 'pointer', border: 'none' }}>
