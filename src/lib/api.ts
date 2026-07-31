@@ -34,7 +34,7 @@ export const fetchAPI = async (endpoint: string, options: FetchOptions = {}) => 
     method: data ? 'POST' : 'GET',
     headers: {
       'Content-Type': 'application/json',
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      ...(token && !endpoint.includes('/login') ? { Authorization: `Bearer ${token}` } : {}),
       ...headers,
     },
     ...customConfig,
