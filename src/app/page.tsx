@@ -28,9 +28,17 @@ export default function Dashboard() {
   const stats = [
     { label: 'Total Posts', value: data?.totalPosts || 0, icon: FileText, change: '+12%', positive: true },
     { label: 'Total Views', value: data?.totalViews || 0, icon: Activity, change: '+24%', positive: true },
-    { label: 'Active Users', value: data?.activeUsers || 0, icon: Users, change: '-4%', positive: false },
+    { label: 'Active Users', value: data?.activeUsers || 0, icon: Users, change: '+5%', positive: true },
     { label: 'Bounce Rate', value: `${data?.bounceRate || 0}%`, icon: TrendingUp, change: '-2%', positive: true },
   ];
+
+  // Prepare chart data dynamically
+  const rawChartData = data?.chartData || [0, 0, 0, 0, 0, 0, 0];
+  const maxView = Math.max(...rawChartData, 1); // Avoid division by zero
+  const normalizedChartData = rawChartData.map((val: number) => ({
+    raw: val,
+    percent: (val / maxView) * 100
+  }));
 
   return (
     <div className={styles.dashboard}>
@@ -74,12 +82,7 @@ export default function Dashboard() {
           <div className={styles.contentGrid}>
             <div className={`card ${styles.mainCard}`}>
               <div className={styles.cardHeader}>
-                <h2 className={styles.cardTitle}>Audience Overview</h2>
-                <select className={styles.select}>
-                  <option>Last 7 days</option>
-                  <option>Last 30 days</option>
-                  <option>This Year</option>
-                </select>
+                <h2 className={styles.cardTitle}>Audience Overview (Last 7 Days)</h2>
               </div>
               <div className={styles.chartPlaceholder}>
                 {/* Minimalist mock chart lines using CSS */}
@@ -87,9 +90,9 @@ export default function Dashboard() {
                   {[1, 2, 3, 4, 5].map(i => <div key={i} className={styles.chartLine}></div>)}
                 </div>
                 <div className={styles.chartBars}>
-                  {[40, 70, 45, 90, 65, 85, 55].map((h, i) => (
-                    <div key={i} className={styles.chartBar} style={{ height: `${h}%` }}>
-                      <div className={styles.chartTooltip}>{h}K</div>
+                  {normalizedChartData.map((dataPoint: any, i: number) => (
+                    <div key={i} className={styles.chartBar} style={{ height: `${dataPoint.percent}%` }}>
+                      <div className={styles.chartTooltip}>{dataPoint.raw}</div>
                     </div>
                   ))}
                 </div>
