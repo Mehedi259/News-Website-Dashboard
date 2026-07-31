@@ -37,12 +37,16 @@ export default function CategoriesPage() {
 
   const handleSave = async () => {
     if (!name || !slug) return alert('Name and slug are required');
+    
+    // Format slug to replace spaces with hyphens (Django slug validation)
+    const formattedSlug = slug.trim().replace(/\s+/g, '-').toLowerCase();
+    
     setSaving(true);
     try {
       if (editId) {
         const res = await fetchAPI(`/categories/${editId}`, {
           method: 'PUT',
-          data: { name, slug }
+          data: { name, slug: formattedSlug }
         });
         if (res.success) {
           setCategories(categories.map(c => c._id === editId ? res.data : c));
@@ -52,7 +56,7 @@ export default function CategoriesPage() {
         }
       } else {
         const res = await fetchAPI('/categories', {
-          data: { name, slug }
+          data: { name, slug: formattedSlug }
         });
         if (res.success) {
           setCategories([...categories, res.data]);
