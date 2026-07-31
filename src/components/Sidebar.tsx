@@ -11,21 +11,19 @@ interface SidebarProps {
 
 export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
   const pathname = usePathname();
-
   const navItems = [
     { name: 'Dashboard', href: '/', icon: LayoutDashboard },
     { name: 'Posts', href: '/posts', icon: FileText },
     { name: 'Categories', href: '/categories', icon: Tags },
     { name: 'Users', href: '/users', icon: Users },
-    { name: 'Settings', href: '/settings', icon: Settings },
   ];
 
   return (
     <aside className={`${styles.sidebar} ${isOpen ? styles.open : ''}`}>
       <div className={styles.logoContainer}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-          <div className={styles.logoIcon}>N</div>
-          <h1 className={styles.logoText}>NewsAdmin</h1>
+          <div className={styles.logoIcon}>H</div>
+          <h1 className={styles.logoText}>Hello Oman Admin</h1>
         </div>
         <button 
           className={styles.closeBtn} 

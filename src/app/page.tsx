@@ -28,8 +28,6 @@ export default function Dashboard() {
   const stats = [
     { label: 'Total Posts', value: data?.totalPosts || 0, icon: FileText, change: '+12%', positive: true },
     { label: 'Total Views', value: data?.totalViews || 0, icon: Activity, change: '+24%', positive: true },
-    { label: 'Active Users', value: data?.activeUsers || 0, icon: Users, change: '+5%', positive: true },
-    { label: 'Bounce Rate', value: `${data?.bounceRate || 0}%`, icon: TrendingUp, change: '-2%', positive: true },
   ];
 
   // Prepare chart data dynamically

@@ -41,7 +41,7 @@ export default function LoginPage() {
   return (
     <div className={styles.container}>
       <div className={styles.formBox}>
-        <h1 className={styles.title}>NewsAdmin</h1>
+        <h1 className={styles.title}>Hello Oman Admin</h1>
         <p className={styles.subtitle}>Sign in to access your dashboard</p>
         
         {error && <div className={styles.error}>{error}</div>}
