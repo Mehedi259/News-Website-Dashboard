@@ -1,4 +1,4 @@
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://news-website-backend-xi.vercel.app/api';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://46.225.103.236:8000/api';
 
 export const getAuthToken = () => {
   if (typeof window !== 'undefined') {
