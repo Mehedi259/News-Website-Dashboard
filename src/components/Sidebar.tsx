@@ -1,7 +1,7 @@
 'use client';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, FileText, Tags, Settings, Users, X } from 'lucide-react';
+import { LayoutDashboard, FileText, Tags, Settings, Users, X, Video, Newspaper } from 'lucide-react';
 import styles from './Sidebar.module.css';
 
 interface SidebarProps {
@@ -14,6 +14,8 @@ export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
   const navItems = [
     { name: 'ড্যাশবোর্ড', href: '/', icon: LayoutDashboard },
     { name: 'পোস্ট', href: '/posts', icon: FileText },
+    { name: 'ভিডিও গ্যালারি', href: '/videos', icon: Video },
+    { name: 'ই-পেপার', href: '/epapers', icon: Newspaper },
     { name: 'ক্যাটাগরি', href: '/categories', icon: Tags },
     { name: 'ইউজার', href: '/users', icon: Users },
   ];
