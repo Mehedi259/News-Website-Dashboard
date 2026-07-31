@@ -12,10 +12,10 @@ interface SidebarProps {
 export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
   const pathname = usePathname();
   const navItems = [
-    { name: 'Dashboard', href: '/', icon: LayoutDashboard },
-    { name: 'Posts', href: '/posts', icon: FileText },
-    { name: 'Categories', href: '/categories', icon: Tags },
-    { name: 'Users', href: '/users', icon: Users },
+    { name: 'ড্যাশবোর্ড', href: '/', icon: LayoutDashboard },
+    { name: 'পোস্ট', href: '/posts', icon: FileText },
+    { name: 'ক্যাটাগরি', href: '/categories', icon: Tags },
+    { name: 'ইউজার', href: '/users', icon: Users },
   ];
 
   return (
@@ -23,7 +23,7 @@ export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
       <div className={styles.logoContainer}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
           <div className={styles.logoIcon}>H</div>
-          <h1 className={styles.logoText}>Hello Oman Admin</h1>
+          <h1 className={styles.logoText}>হ্যালো ওমান অ্যাডমিন</h1>
         </div>
         <button 
           className={styles.closeBtn} 
@@ -53,7 +53,7 @@ export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
       </nav>
       
       <div className={styles.footer}>
-        <p className={styles.version}>Version 1.0.0</p>
+        <p className={styles.version}>ভার্সন ১.০.০</p>
       </div>
     </aside>
   );

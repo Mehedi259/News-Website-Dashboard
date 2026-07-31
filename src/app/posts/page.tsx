@@ -41,7 +41,7 @@ export default function PostsPage() {
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this post?')) return;
+    if (!confirm('আপনি কি নিশ্চিত যে আপনি এই পোস্টটি মুছে ফেলতে চান?')) return;
     try {
       await fetchAPI(`/posts/${id}`, { method: 'DELETE' });
       setPosts(posts.filter(p => p._id !== id));
@@ -54,12 +54,12 @@ export default function PostsPage() {
     <div className={styles.container}>
       <header className={styles.header}>
         <div>
-          <h1 className={styles.title}>Manage Posts</h1>
-          <p className={styles.subtitle}>View, edit, and create news articles.</p>
+          <h1 className={styles.title}>পোস্ট ম্যানেজমেন্ট</h1>
+          <p className={styles.subtitle}>সংবাদ প্রবন্ধগুলো দেখুন, সম্পাদনা করুন এবং তৈরি করুন।</p>
         </div>
         <Link href="/posts/new" className="btn btn-primary">
           <Plus size={18} />
-          New Post
+          নতুন পোস্ট
         </Link>
       </header>
 
@@ -68,12 +68,12 @@ export default function PostsPage() {
           <div className="input-group" style={{ marginBottom: 0, width: '300px' }}>
             <div className={styles.searchBox}>
               <Search size={18} className={styles.searchIcon} />
-              <input type="text" placeholder="Search posts..." className="input-field" style={{ paddingLeft: '2.5rem' }} value={search} onChange={(e) => setSearch(e.target.value)} />
+              <input type="text" placeholder="পোস্ট অনুসন্ধান করুন..." className="input-field" style={{ paddingLeft: '2.5rem' }} value={search} onChange={(e) => setSearch(e.target.value)} />
             </div>
           </div>
           <button className="btn btn-secondary">
             <Filter size={18} />
-            Filters
+            ফিল্টার
           </button>
         </div>
 
@@ -81,21 +81,21 @@ export default function PostsPage() {
           <table className="data-table">
             <thead>
               <tr>
-                <th>Title</th>
-                <th>Category</th>
-                <th>Date</th>
-                <th>Status</th>
-                <th>Actions</th>
+                <th>শিরোনাম</th>
+                <th>ক্যাটাগরি</th>
+                <th>তারিখ</th>
+                <th>স্ট্যাটাস</th>
+                <th>অ্যাকশন</th>
               </tr>
             </thead>
             <tbody>
               {loading ? (
                 <tr>
-                  <td colSpan={5} style={{ textAlign: 'center', padding: '20px' }}>Loading posts...</td>
+                  <td colSpan={5} style={{ textAlign: 'center', padding: '20px' }}>পোস্ট লোড হচ্ছে...</td>
                 </tr>
               ) : posts.length === 0 ? (
                 <tr>
-                  <td colSpan={5} style={{ textAlign: 'center', padding: '20px' }}>No posts found.</td>
+                  <td colSpan={5} style={{ textAlign: 'center', padding: '20px' }}>কোনো পোস্ট পাওয়া যায়নি।</td>
                 </tr>
               ) : (
                 posts.map(post => (
@@ -105,13 +105,13 @@ export default function PostsPage() {
                     </td>
                     <td>
                       <span className="badge" style={{ background: 'var(--bg-card-hover)' }}>
-                        {post.category?.name || 'Uncategorized'}
+                        {post.category?.name || 'ক্যাটাগরি নেই'}
                       </span>
                     </td>
                     <td>{new Date(post.created_at || post.createdAt || new Date()).toLocaleDateString()}</td>
                     <td>
                       <span className={`badge ${post.status === 'published' ? 'badge-success' : 'badge-warning'}`}>
-                        {post.status || 'draft'}
+                        {post.status || 'খসড়া'}
                       </span>
                     </td>
                     <td>
@@ -133,10 +133,10 @@ export default function PostsPage() {
         
         {!loading && posts.length > 0 && (
           <div className={styles.pagination}>
-            <span className={styles.pageInfo}>Showing {posts.length} posts</span>
+            <span className={styles.pageInfo}>মোট {posts.length} টি পোস্ট দেখাচ্ছে</span>
             <div className={styles.pageControls}>
-              <button className="btn btn-secondary" disabled>Previous</button>
-              <button className="btn btn-secondary" disabled>Next</button>
+              <button className="btn btn-secondary" disabled>পূর্ববর্তী</button>
+              <button className="btn btn-secondary" disabled>পরবর্তী</button>
             </div>
           </div>
         )}

@@ -26,8 +26,8 @@ export default function Dashboard() {
   }, []);
 
   const stats = [
-    { label: 'Total Posts', value: data?.totalPosts || 0, icon: FileText, change: '+12%', positive: true },
-    { label: 'Total Views', value: data?.totalViews || 0, icon: Activity, change: '+24%', positive: true },
+    { label: 'সর্বমোট পোস্ট', value: data?.totalPosts || 0, icon: FileText, change: '+12%', positive: true },
+    { label: 'সর্বমোট ভিউ', value: data?.totalViews || 0, icon: Activity, change: '+24%', positive: true },
   ];
 
   // Prepare chart data dynamically
@@ -42,17 +42,17 @@ export default function Dashboard() {
     <div className={styles.dashboard}>
       <header className={styles.header}>
         <div>
-          <h1 className={styles.title}>Dashboard Overview</h1>
-          <p className={styles.subtitle}>Welcome back! Here&apos;s what&apos;s happening today.</p>
+          <h1 className={styles.title}>ড্যাশবোর্ড ওভারভিউ</h1>
+          <p className={styles.subtitle}>স্বাগতম! আজকের আপডেটগুলো দেখে নিন।</p>
         </div>
         <Link href="/posts/new" className="btn btn-primary">
           <FileText size={18} />
-          Create New Post
+          নতুন পোস্ট তৈরি করুন
         </Link>
       </header>
 
       {loading ? (
-        <div style={{ padding: '2rem', textAlign: 'center' }}>Loading stats...</div>
+        <div style={{ padding: '2rem', textAlign: 'center' }}>স্ট্যাটস লোড হচ্ছে...</div>
       ) : (
         <>
           <div className={styles.statsGrid}>
@@ -80,7 +80,7 @@ export default function Dashboard() {
           <div className={styles.contentGrid}>
             <div className={`card ${styles.mainCard}`}>
               <div className={styles.cardHeader}>
-                <h2 className={styles.cardTitle}>Audience Overview (Last 7 Days)</h2>
+                <h2 className={styles.cardTitle}>অডিয়েন্স ওভারভিউ (গত ৭ দিন)</h2>
               </div>
               <div className={styles.chartPlaceholder}>
                 {/* Minimalist mock chart lines using CSS */}
@@ -98,19 +98,19 @@ export default function Dashboard() {
             </div>
 
             <div className={`card ${styles.sideCard}`}>
-              <h2 className={styles.cardTitle}>Recent Posts</h2>
+              <h2 className={styles.cardTitle}>সাম্প্রতিক পোস্টসমূহ</h2>
               <div className={styles.recentList}>
                 {data?.recentPosts?.map((post: any) => (
                   <div key={post._id} className={styles.recentItem}>
                     <div className={styles.recentImage} style={post.image ? { backgroundImage: `url(${post.image})`, backgroundSize: 'cover' } : {}}></div>
                     <div className={styles.recentInfo}>
                       <h4 className={styles.recentTitle}>{post.title}</h4>
-                      <span className={styles.recentTime}>{new Date(post.created_at || post.createdAt).toLocaleDateString()}</span>
+                      <span className={styles.recentTime}>{new Date(post.created_at || post.createdAt).toLocaleDateString('bn-BD')}</span>
                     </div>
                   </div>
                 ))}
                 {(!data?.recentPosts || data.recentPosts.length === 0) && (
-                  <div style={{ padding: '1rem', color: 'var(--text-muted)' }}>No recent posts found.</div>
+                  <div style={{ padding: '1rem', color: 'var(--text-muted)' }}>কোনো সাম্প্রতিক পোস্ট পাওয়া যায়নি।</div>
                 )}
               </div>
             </div>

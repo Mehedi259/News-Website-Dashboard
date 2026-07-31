@@ -23,16 +23,16 @@ export default function LoginPage() {
 
       if (res.success && res.data.token) {
         if (res.data.role !== 'admin' && res.data.role !== 'editor') {
-          setError('You do not have permission to access the dashboard.');
+          setError('ড্যাশবোর্ডে প্রবেশ করার অনুমতি আপনার নেই।');
           return;
         }
         setAuthToken(res.data.token);
         router.push('/');
       } else {
-        setError('Login failed. Please try again.');
+        setError('লগইন ব্যর্থ হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।');
       }
     } catch (err: any) {
-      setError(err.message || 'Invalid credentials');
+      setError(err.message || 'ভুল ইমেইল বা পাসওয়ার্ড');
     } finally {
       setLoading(false);
     }
@@ -41,14 +41,14 @@ export default function LoginPage() {
   return (
     <div className={styles.container}>
       <div className={styles.formBox}>
-        <h1 className={styles.title}>Hello Oman Admin</h1>
-        <p className={styles.subtitle}>Sign in to access your dashboard</p>
+        <h1 className={styles.title}>হ্যালো ওমান অ্যাডমিন</h1>
+        <p className={styles.subtitle}>ড্যাশবোর্ডে প্রবেশ করতে লগইন করুন</p>
         
         {error && <div className={styles.error}>{error}</div>}
         
         <form onSubmit={handleLogin}>
           <div className={styles.formGroup}>
-            <label className={styles.label}>Email Address</label>
+            <label className={styles.label}>ইমেইল অ্যাড্রেস</label>
             <input 
               type="email" 
               className={styles.input} 
@@ -59,7 +59,7 @@ export default function LoginPage() {
             />
           </div>
           <div className={styles.formGroup}>
-            <label className={styles.label}>Password</label>
+            <label className={styles.label}>পাসওয়ার্ড</label>
             <input 
               type="password" 
               className={styles.input} 
@@ -70,7 +70,7 @@ export default function LoginPage() {
             />
           </div>
           <button type="submit" className={styles.button} disabled={loading}>
-            {loading ? 'Signing in...' : 'Sign In'}
+            {loading ? 'লগইন হচ্ছে...' : 'লগইন'}
           </button>
         </form>
       </div>

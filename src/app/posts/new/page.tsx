@@ -62,7 +62,7 @@ export default function NewPostPage() {
 
   const handleSave = async (isDraft: boolean = false) => {
     if (!title || !content || !category) {
-      setError('Title, content, and category are required.');
+      setError('শিরোনাম, কনটেন্ট এবং ক্যাটাগরি দেওয়া বাধ্যতামূলক।');
       return;
     }
 
@@ -89,10 +89,10 @@ export default function NewPostPage() {
       if (res.success) {
         router.push('/posts');
       } else {
-        setError('Failed to create post');
+        setError('পোস্ট তৈরি করা সম্ভব হয়নি');
       }
     } catch (err: any) {
-      setError(err.message || 'Error creating post');
+      setError(err.message || 'পোস্ট তৈরিতে ত্রুটি');
     } finally {
       setLoading(false);
     }
@@ -106,8 +106,8 @@ export default function NewPostPage() {
             <ArrowLeft size={18} />
           </Link>
           <div>
-            <h1 className={styles.title}>Create New Post</h1>
-            <p className={styles.subtitle}>Write and publish a new news article.</p>
+            <h1 className={styles.title}>নতুন পোস্ট তৈরি করুন</h1>
+            <p className={styles.subtitle}>একটি নতুন সংবাদ প্রবন্ধ লিখুন এবং প্রকাশ করুন।</p>
           </div>
         </div>
         <div className={styles.headerActions}>
@@ -116,7 +116,7 @@ export default function NewPostPage() {
             onClick={() => handleSave(true)}
             disabled={loading}
           >
-            Save Draft
+            খসড়া সংরক্ষণ করুন
           </button>
           <button 
             className="btn btn-primary" 
@@ -124,7 +124,7 @@ export default function NewPostPage() {
             disabled={loading}
           >
             <Save size={18} />
-            {loading ? 'Publishing...' : 'Publish Post'}
+            {loading ? 'প্রকাশ হচ্ছে...' : 'পোস্ট প্রকাশ করুন'}
           </button>
         </div>
       </header>
@@ -135,18 +135,18 @@ export default function NewPostPage() {
         <div className={styles.mainContent}>
           <div className="card">
             <div className="input-group">
-              <label className="input-label">Post Title</label>
+              <label className="input-label">পোস্টের শিরোনাম</label>
               <input 
                 type="text" 
                 className="input-field" 
-                placeholder="Enter an engaging title..." 
+                placeholder="একটি আকর্ষণীয় শিরোনাম দিন..." 
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
               />
             </div>
             
             <div className="input-group">
-              <label className="input-label">Content</label>
+              <label className="input-label">কনটেন্ট</label>
               <div className={styles.editorPlaceholder}>
                 <div className={styles.editorToolbar}>
                   <span className={styles.editorTool}>B</span>
@@ -157,7 +157,7 @@ export default function NewPostPage() {
                 </div>
                 <textarea 
                   className={styles.editorTextarea} 
-                  placeholder="Write your article content here..."
+                  placeholder="এখানে আপনার প্রবন্ধের কনটেন্ট লিখুন..."
                   rows={15}
                   value={content}
                   onChange={(e) => setContent(e.target.value)}
@@ -170,44 +170,44 @@ export default function NewPostPage() {
 
         <div className={styles.sideContent}>
           <div className="card">
-            <h3 className={styles.sectionTitle}>Publishing Details</h3>
+            <h3 className={styles.sectionTitle}>পাবলিশিং ডিটেইলস</h3>
             <div className="input-group">
-              <label className="input-label">Category</label>
+              <label className="input-label">ক্যাটাগরি</label>
               <select 
                 className="input-field" 
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
               >
-                {categories.length === 0 && <option value="">Loading...</option>}
+                {categories.length === 0 && <option value="">লোড হচ্ছে...</option>}
                 {categories.map((cat) => (
                   <option key={cat._id} value={cat._id}>{cat.name}</option>
                 ))}
               </select>
             </div>
             <div className="input-group" style={{ marginBottom: 0 }}>
-              <label className="input-label">Status</label>
+              <label className="input-label">স্ট্যাটাস</label>
               <select 
                 className="input-field"
                 value={status}
                 onChange={(e) => setStatus(e.target.value)}
               >
-                <option value="draft">Draft</option>
-                <option value="published">Published</option>
+                <option value="draft">খসড়া</option>
+                <option value="published">প্রকাশিত</option>
               </select>
             </div>
           </div>
 
           <div className="card">
-            <h3 className={styles.sectionTitle}>Featured Image</h3>
+            <h3 className={styles.sectionTitle}>ফিচার্ড ছবি</h3>
             <div className="input-group" style={{ marginBottom: 0 }}>
-              <label className="input-label">Upload Image</label>
+              <label className="input-label">ছবি আপলোড করুন</label>
               <div 
                 className={styles.imageUpload} 
                 onClick={() => document.getElementById('image-upload')?.click()}
               >
                 <ImageIcon size={24} className={styles.uploadIcon} />
-                <span className={styles.uploadText}>Click to select image</span>
-                <span className={styles.uploadHint}>JPG, PNG, GIF up to 5MB</span>
+                <span className={styles.uploadText}>ছবি নির্বাচন করতে ক্লিক করুন</span>
+                <span className={styles.uploadHint}>JPG, PNG, GIF সর্বোচ্চ 5MB</span>
               </div>
               <input 
                 id="image-upload"

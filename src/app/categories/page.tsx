@@ -36,7 +36,7 @@ export default function CategoriesPage() {
   };
 
   const handleSave = async () => {
-    if (!name || !slug) return alert('Name and slug are required');
+    if (!name || !slug) return alert('নাম এবং স্লাগ দেওয়া বাধ্যতামূলক');
     
     // Format slug to replace spaces with hyphens (Django slug validation)
     const formattedSlug = slug.trim().replace(/\s+/g, '-').toLowerCase();
@@ -65,19 +65,19 @@ export default function CategoriesPage() {
         }
       }
     } catch (err: any) {
-      alert(err.message || 'Failed to create category');
+      alert(err.message || 'ক্যাটাগরি তৈরিতে সমস্যা হয়েছে');
     } finally {
       setSaving(false);
     }
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this category?')) return;
+    if (!confirm('আপনি কি নিশ্চিত যে আপনি এই ক্যাটাগরি মুছে ফেলতে চান?')) return;
     try {
       await fetchAPI(`/categories/${id}`, { method: 'DELETE' });
       setCategories(categories.filter(c => c._id !== id));
     } catch (err: any) {
-      alert(err.message || 'Failed to delete category');
+      alert(err.message || 'ক্যাটাগরি মুছতে সমস্যা হয়েছে');
     }
   };
 
@@ -85,50 +85,50 @@ export default function CategoriesPage() {
     <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
       <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
         <div>
-          <h1 style={{ fontSize: '1.75rem', fontWeight: 700, marginBottom: '0.25rem', letterSpacing: '-0.02em' }}>Manage Categories</h1>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem' }}>Add, edit, or delete news categories.</p>
+          <h1 style={{ fontSize: '1.75rem', fontWeight: 700, marginBottom: '0.25rem', letterSpacing: '-0.02em' }}>ক্যাটাগরি ম্যানেজমেন্ট</h1>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem' }}>সংবাদ ক্যাটাগরি তৈরি, সম্পাদনা অথবা মুছে ফেলুন।</p>
         </div>
         <button className="btn btn-primary" onClick={() => { setEditId(null); setName(''); setSlug(''); inputRef.current?.focus(); }}>
           <Plus size={18} />
-          Add Category
+          নতুন ক্যাটাগরি
         </button>
       </header>
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '1.5rem' }}>
         <div className="card">
           <h3 style={{ fontSize: '1.1rem', fontWeight: 600, marginBottom: '1rem', borderBottom: '1px solid var(--border)', paddingBottom: '0.75rem' }}>
-            {editId ? 'Edit Category' : 'Add New Category'}
+            {editId ? 'ক্যাটাগরি সম্পাদনা করুন' : 'নতুন ক্যাটাগরি তৈরি করুন'}
           </h3>
           <form style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }} onSubmit={(e) => { e.preventDefault(); handleSave(); }}>
             <div className="input-group" style={{ marginBottom: 0 }}>
-              <label className="input-label">Category Name</label>
+              <label className="input-label">ক্যাটাগরির নাম</label>
               <input 
                 ref={inputRef} 
                 type="text" 
                 className="input-field" 
-                placeholder="e.g. Technology" 
+                placeholder="যেমন: প্রযুক্তি" 
                 value={name}
                 onChange={e => setName(e.target.value)}
                 required
               />
             </div>
             <div className="input-group" style={{ marginBottom: 0 }}>
-              <label className="input-label">Slug</label>
+              <label className="input-label">স্লাগ</label>
               <input 
                 type="text" 
                 className="input-field" 
-                placeholder="e.g. technology" 
+                placeholder="যেমন: technology" 
                 value={slug}
                 onChange={e => setSlug(e.target.value)}
                 required
               />
             </div>
             <button type="submit" className="btn btn-primary" style={{ marginTop: '0.5rem', width: '100%' }} disabled={saving}>
-              {saving ? 'Saving...' : editId ? 'Update Category' : 'Save Category'}
+              {saving ? 'সংরক্ষণ হচ্ছে...' : editId ? 'ক্যাটাগরি আপডেট করুন' : 'ক্যাটাগরি সেভ করুন'}
             </button>
             {editId && (
               <button type="button" className="btn btn-secondary" style={{ width: '100%' }} onClick={() => { setEditId(null); setName(''); setSlug(''); }}>
-                Cancel
+                বাতিল করুন
               </button>
             )}
           </form>
@@ -139,16 +139,16 @@ export default function CategoriesPage() {
             <table className="data-table">
               <thead>
                 <tr>
-                  <th>Name</th>
-                  <th>Slug</th>
-                  <th>Actions</th>
+                  <th>নাম</th>
+                  <th>স্লাগ</th>
+                  <th>অ্যাকশন</th>
                 </tr>
               </thead>
               <tbody>
                 {loading ? (
-                  <tr><td colSpan={3} style={{ textAlign: 'center', padding: '1rem' }}>Loading...</td></tr>
+                  <tr><td colSpan={3} style={{ textAlign: 'center', padding: '1rem' }}>লোড হচ্ছে...</td></tr>
                 ) : categories.length === 0 ? (
-                  <tr><td colSpan={3} style={{ textAlign: 'center', padding: '1rem' }}>No categories found.</td></tr>
+                  <tr><td colSpan={3} style={{ textAlign: 'center', padding: '1rem' }}>কোনো ক্যাটাগরি পাওয়া যায়নি।</td></tr>
                 ) : (
                   categories.map(cat => (
                     <tr key={cat._id}>
