@@ -102,7 +102,7 @@ export default function Dashboard() {
               <div className={styles.recentList}>
                 {data?.recentPosts?.map((post: any) => (
                   <div key={post._id} className={styles.recentItem}>
-                    <div className={styles.recentImage} style={post.image ? { backgroundImage: `url(${post.image})`, backgroundSize: 'cover' } : {}}></div>
+                    <div className={styles.recentImage} style={post.image ? { backgroundImage: `url(${post.image.startsWith('/') ? 'https://helloomanbangla.com' + post.image : post.image})`, backgroundSize: 'cover' } : {}}></div>
                     <div className={styles.recentInfo}>
                       <h4 className={styles.recentTitle}>{post.title}</h4>
                       <span className={styles.recentTime}>{new Date(post.created_at || post.createdAt).toLocaleDateString('bn-BD')}</span>
