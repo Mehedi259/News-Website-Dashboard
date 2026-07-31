@@ -9,7 +9,8 @@ interface Post {
   _id: string;
   title: string;
   category: { name: string } | null;
-  createdAt: string;
+  created_at?: string;
+  createdAt?: string;
   status: string;
 }
 
@@ -107,7 +108,7 @@ export default function PostsPage() {
                         {post.category?.name || 'Uncategorized'}
                       </span>
                     </td>
-                    <td>{new Date(post.createdAt).toLocaleDateString()}</td>
+                    <td>{new Date(post.created_at || post.createdAt || new Date()).toLocaleDateString()}</td>
                     <td>
                       <span className={`badge ${post.status === 'published' ? 'badge-success' : 'badge-warning'}`}>
                         {post.status || 'draft'}

@@ -107,7 +107,7 @@ export default function Dashboard() {
                     <div className={styles.recentImage} style={post.image ? { backgroundImage: `url(${post.image})`, backgroundSize: 'cover' } : {}}></div>
                     <div className={styles.recentInfo}>
                       <h4 className={styles.recentTitle}>{post.title}</h4>
-                      <span className={styles.recentTime}>{new Date(post.createdAt).toLocaleDateString()}</span>
+                      <span className={styles.recentTime}>{new Date(post.created_at || post.createdAt).toLocaleDateString()}</span>
                     </div>
                   </div>
                 ))}
