@@ -24,6 +24,8 @@ export default function EditPostPage() {
   const [category, setCategory] = useState('');
   const [status, setStatus] = useState('published');
   const [image, setImage] = useState('');
+  const [reporter, setReporter] = useState('');
+  const [publishedDate, setPublishedDate] = useState('');
   
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -52,6 +54,18 @@ export default function EditPostPage() {
         setCategory(res.data.category?._id || res.data.category || '');
         setStatus(res.data.status || 'published');
         setImage(res.data.image || '');
+        setReporter(res.data.reporter || '');
+        if (res.data.published_date) {
+          try {
+            const d = new Date(res.data.published_date);
+            const localString = new Date(d.getTime() - (d.getTimezoneOffset() * 60000)).toISOString().slice(0, 16);
+            setPublishedDate(localString);
+          } catch(e) {
+            setPublishedDate('');
+          }
+        } else {
+          setPublishedDate('');
+        }
       }
     } catch (err) {
       console.error('Failed to load post', err);
@@ -100,6 +114,8 @@ export default function EditPostPage() {
       category,
       status: postStatus,
       image: image || '/images/hero_news_oman_1783894879641.png', // Fallback image if empty
+      reporter,
+      published_date: publishedDate ? new Date(publishedDate).toISOString() : null,
     };
 
     try {
@@ -193,6 +209,25 @@ export default function EditPostPage() {
         <div className={styles.sideContent}>
           <div className="card">
             <h3 className={styles.sectionTitle}>পাবলিশিং ডিটেইলস</h3>
+            <div className="input-group">
+              <label className="input-label">রিপোর্টার</label>
+              <input 
+                type="text" 
+                className="input-field" 
+                placeholder="রিপোর্টারের নাম" 
+                value={reporter}
+                onChange={(e) => setReporter(e.target.value)}
+              />
+            </div>
+            <div className="input-group">
+              <label className="input-label">প্রকাশের তারিখ ও সময়</label>
+              <input 
+                type="datetime-local" 
+                className="input-field" 
+                value={publishedDate}
+                onChange={(e) => setPublishedDate(e.target.value)}
+              />
+            </div>
             <div className="input-group">
               <label className="input-label">ক্যাটাগরি</label>
               <select 
